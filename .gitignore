@@ -1,1 +1,9 @@
+# vim buffers
 *.sw[po]
+
+# cpp files
+*.o
+*.d
+
+# build target
+tetris

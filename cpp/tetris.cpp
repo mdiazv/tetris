@@ -1,31 +1,17 @@
 #include <iostream>
-#include <unistd.h>
 #include "domain.h"
+#include "usecases.h"
 #include "interfaces.h"
 
 using namespace std;
 
 int main() {
-    srand(time(NULL));
-    for (int k = 0; k < 10; k++) {
-        Block b = *Block::make(0, 0);
-        for (auto p : b.points()) {
-            cout << "(" << p.first << ", " << p.second << ") ";
-        }
-        cout << "\n";
-        b.rotate(ROTATE_CW);
-        for (auto p : b.points()) {
-            cout << "(" << p.first << ", " << p.second << ") ";
-        }
-        cout << "\n";
-    }
-    StreamOutput out(&cout);
+    auto seed = time(NULL) * 42;
+    srand(seed);
+    Player p = 0;
     World w;
-    w.spawn();
-    out.render(w);
-    for (int i = 0; i < 15; i++) {
-        usleep(500000);
-        w.drop();
-        out.render(w);
-    }
+    StreamOutput out(&cout);
+    Game g(&p, &w, &out);
+    g.start();
+    cout << "seed " << seed << "\n";
 }

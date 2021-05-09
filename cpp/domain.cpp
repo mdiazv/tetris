@@ -46,21 +46,78 @@ Block* Block::make(int x, int y) {
     return new Block(bs[rand() % bs.size()]);
 }
 
+bool World::valid(Block &b) {
+    for (auto p: b.points()) {
+        auto [x, y] = p;
+        if (x < 0 || x >= C || y >= R || Bs[y][x]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool World::rotate(Rotation r) {
+    Block b(*current);
+    b.rotate(r);
+    if (!valid(b)) {
+        return false;
+    }
     current->rotate(r);
     return true;
 }
+
 bool World::move(Direction d) {
+    Block b(*current);
+    b.move(d);
+    if (!valid(b)) {
+        return false;
+    }
     current->move(d);
     return true;
 }
+
 bool World::drop() {
+    Block b(*current);
+    b.drop();
+    if (!valid(b)) {
+        return false;
+    }
     current->drop();
     return true;
 }
+
+bool World::landed() {
+    auto color = current->color();
+    for (auto p: current->points()) {
+        auto [x, y] = p;
+        Bs[y][x] = color;
+    }
+    return spawn();
+}
+
+int World::check_lines() {
+    int ls = 0;
+    for (int y = R-1; y >= 0; --y) {
+        if (all_of(Bs[y], Bs[y]+C, [](int c) { return c != 0; })) {
+            clear_line(y++);
+            ls++;
+        }
+    }
+    return ls;
+}
+
+void World::clear_line(int y) {
+    while (y >= 0) {
+        for (int x = 0; x < C; ++x) {
+            Bs[y][x] = y ? Bs[y-1][x] : 0;
+        }
+        y--;
+    }
+}
+
 bool World::spawn() {
     current = Block::make((C-1)/2, 0);
-    return true;
+    return valid(*current);
 }
 
 vector<vector<int>> World::render() {

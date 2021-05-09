@@ -43,15 +43,28 @@ class Block {
 class World {
     public:
         World() : current(nullptr) {}
+        /** Rotate current block one step in r direction */
         bool rotate(Rotation r);
+        /** Move current block by one position in d direction */
         bool move(Direction d);
+        /** Drops current block by one position */
         bool drop();
+        /** Spawn a new random block at the top center */
         bool spawn();
+        /** Callback to notify that current block has landed */
+        bool landed();
+        /** Check for lines, delete them, returns number of lines */
+        int check_lines();
+        /** Return a 2D vector representation of the world */
         vector<vector<int>> render();
     private:
         static const int R = 20, C = 10;
         int Bs[R][C] = {{0}};
         Block *current;
+        /** Is this block in a valid position? */
+        bool valid(Block &b);
+        /** Clears line y by moving above blocks one line downwards */
+        void clear_line(int y);
 };
 
 #endif

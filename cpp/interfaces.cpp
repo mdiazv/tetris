@@ -5,7 +5,11 @@ void StreamOutput::render(World &w) {
     for (auto row : v) {
         *out << " | ";
         for (auto c : row) {
-            *out << c << " ";
+            if (c) {
+                *out << c << " ";
+            } else {
+                *out << "  ";
+            }
         }
         *out << "|\n";
     }
@@ -14,4 +18,8 @@ void StreamOutput::render(World &w) {
         *out << "- ";
     }
     *out << "|\n";
+}
+
+void StreamOutput::gameover(int score) {
+    *out << "Game over! [" << score << " points]\n";
 }
