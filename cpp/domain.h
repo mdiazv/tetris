@@ -9,6 +9,7 @@ using Color = int;
 using Rotation = int;
 using Direction = int;
 using Point = pair<int, int>;
+using WorldView = vector<vector<int>>;
 
 const Rotation ROTATE_CW  = 1;
 const Rotation NO_ROTATE  = 0;
@@ -56,7 +57,7 @@ class World {
         /** Check for lines, delete them, returns number of lines */
         int check_lines();
         /** Return a 2D vector representation of the world */
-        vector<vector<int>> render();
+        WorldView render();
     private:
         static const int R = 20, C = 10;
         int Bs[R][C] = {{0}};

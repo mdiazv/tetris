@@ -120,7 +120,7 @@ bool World::spawn() {
     return valid(*current);
 }
 
-vector<vector<int>> World::render() {
+WorldView World::render() {
     vector<vector<int>> w(R, vector<int>(C));
     for (int i = 0; i < R; ++i) {
         for (int j = 0; j < C; ++j) {
