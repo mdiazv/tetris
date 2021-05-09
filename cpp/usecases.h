@@ -2,6 +2,7 @@
 #define USECASES_H
 
 #include <deque>
+#include <mutex>
 #include "domain.h"
 
 using Player = int;
@@ -36,6 +37,8 @@ class InputEventQueue {
         void emit(Event);
     private:
         deque<Event> events;
+        mutex mutex;
+        condition_variable got_events;
 };
 
 class Game {

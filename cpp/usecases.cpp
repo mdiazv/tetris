@@ -4,16 +4,17 @@
 #include "usecases.h"
 
 Event InputEventQueue::read() {
-    while (events.empty()) {
-        usleep(100);
-    }
+    unique_lock<std::mutex> lock(mutex);
+    got_events.wait(lock, [this]{ return !events.empty(); });
     Event e = events.front();
     events.pop_front();
     return e;
 }
 
 void InputEventQueue::emit(Event e) {
+    unique_lock<std::mutex> lock(mutex);
     events.push_back(e);
+    got_events.notify_one();
 }
 
 void Game::start() {
