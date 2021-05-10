@@ -1,7 +1,7 @@
+#include <unistd.h>
 #include "interfaces.h"
 
-void StreamOutput::render(World &w) {
-    auto v = w.render();
+void StreamOutput::render(WorldView v) {
     for (auto row : v) {
         *out << " | ";
         for (auto c : row) {
@@ -22,4 +22,13 @@ void StreamOutput::render(World &w) {
 
 void StreamOutput::gameover(int score) {
     *out << "Game over! [" << score << " points]\n";
+}
+
+void RandomPlayer::run() {
+    while (alive) {
+        if (rand() % 10 <= 1) {
+            events->emit(rand() % 10 < 5 ? EV_LEFT : EV_RIGHT);
+            usleep(10000);
+        }
+    }
 }

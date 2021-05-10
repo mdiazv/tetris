@@ -8,10 +8,17 @@
 class StreamOutput : public Output {
     public:
         StreamOutput(ostream *out) : out(out) {}
-        virtual void render(World &w);
+        virtual void render(WorldView v);
         virtual void gameover(int score);
     private:
         ostream *out;
+};
+
+class RandomPlayer : public Player {
+    public:
+        virtual void view(WorldView) {}
+    private:
+        virtual void run();
 };
 
 #endif

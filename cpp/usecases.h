@@ -1,24 +1,18 @@
 #ifndef USECASES_H
 #define USECASES_H
 
-#include <deque>
 #include <mutex>
+#include <queue>
+#include <thread>
 #include "domain.h"
 
-using Player = int;
 class Output {
     public:
         virtual ~Output() {}
         /** Render game to output */
-        virtual void render(World &w) = 0;
+        virtual void render(WorldView v) = 0;
         /** Render gameover screen */
         virtual void gameover(int score) = 0;
-};
-
-class Input {
-    public:
-        virtual ~Input() {}
-        virtual void view(WorldView);
 };
 
 using Event = int;
@@ -30,15 +24,32 @@ const Event EV_ROTATE = 3;
 const Event EV_DROP = 4;
 const Event EV_QUIT = 5;
 
-
 class InputEventQueue {
     public:
+        /** Read the next event from the queue, whenever we get it */
         Event read();
         void emit(Event);
     private:
-        deque<Event> events;
+        queue<Event> events;
         mutex mutex;
         condition_variable got_events;
+};
+
+class Player {
+    public:
+        virtual ~Player() {}
+        /** Let the player know game started */
+        void start(InputEventQueue*);
+        /** Let the player know game ended */
+        void gameover();
+        /** Let the player know world state changed */
+        virtual void view(WorldView) = 0;
+    protected:
+        InputEventQueue *events;
+        thread thread;
+        bool alive = false;
+        /** Player game loop */
+        virtual void run() = 0;
 };
 
 class Game {
@@ -56,8 +67,8 @@ class Game {
         int score = 0;
         int level = 1;
         bool running = false;
-        /** Game loop */
-        void run();
+        /** Game loop. Returns obtained score */
+        int run();
         /** Emits a drop event with a frequency based on current level */
         void ticker();
         /** Apply received event on the world */

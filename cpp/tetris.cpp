@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     auto seed = time(NULL) * 42;
     srand(seed);
-    Player p = 0;
+    RandomPlayer p;
     World w;
     StreamOutput out(&cout);
     Game g(&p, &w, &out);

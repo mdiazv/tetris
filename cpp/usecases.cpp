@@ -7,14 +7,25 @@ Event InputEventQueue::read() {
     unique_lock<std::mutex> lock(mutex);
     got_events.wait(lock, [this]{ return !events.empty(); });
     Event e = events.front();
-    events.pop_front();
+    events.pop();
     return e;
 }
 
 void InputEventQueue::emit(Event e) {
     unique_lock<std::mutex> lock(mutex);
-    events.push_back(e);
+    events.push(e);
     got_events.notify_one();
+}
+
+void Player::start(InputEventQueue *ieq) {
+    events = ieq;
+    alive = true;
+    thread = std::thread(&Player::run, this);
+}
+
+void Player::gameover() {
+    alive = false;
+    thread.join();
 }
 
 void Game::start() {
@@ -23,17 +34,15 @@ void Game::start() {
 
 void Game::ticker() {
     do {
-        if (rand() % 10 <= 1) {
-            events.emit(rand() % 10 < 5 ? EV_LEFT : EV_RIGHT);
-        }
         usleep(5000);
         events.emit(EV_DROP);
     } while (running);
 }
 
-void Game::run() {
+int Game::run() {
     running = true;
     score = 0;
+    p->start(&events);
     thread ticker(&Game::ticker, this);
     do {
         score += w->check_lines();
@@ -48,14 +57,18 @@ void Game::run() {
             }
             bool ok = execute(e);
             landed = e == EV_DROP && !ok;
-            out->render(*w);
+            WorldView v = w->render();
+            out->render(v);
+            p->view(v);
         } while (!landed);
     } while (w->landed());
 cleanup:
-    out->render(*w);
+    out->render(w->render());
     out->gameover(score);
+    p->gameover();
     running = false;
     ticker.join();
+    return score;
 }
 
 bool Game::execute(Event e) {
