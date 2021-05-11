@@ -1,6 +1,7 @@
 
 CXX := g++
 CXXFLAGS := -std=c++17 -g -Wall -MMD -MP
+LDFLAGS := -lcurses
 
 TARGET := tetris
 SRCS := $(shell find . -name "*.cpp")

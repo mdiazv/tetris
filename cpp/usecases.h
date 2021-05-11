@@ -16,13 +16,13 @@ class Output {
 };
 
 using Event = int;
-
-const Event EV_NONE = 0;
-const Event EV_LEFT = 1;
-const Event EV_RIGHT = 2;
-const Event EV_ROTATE = 3;
-const Event EV_DROP = 4;
-const Event EV_QUIT = 5;
+const Event EV_NONE      = 0;
+const Event EV_LEFT      = 1;
+const Event EV_RIGHT     = 2;
+const Event EV_ROTATE    = 3;
+const Event EV_DROP      = 4;
+const Event EV_HARD_DROP = 5;
+const Event EV_QUIT      = 6;
 
 class InputEventQueue {
     public:

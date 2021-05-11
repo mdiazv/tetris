@@ -34,7 +34,7 @@ void Game::start() {
 
 void Game::ticker() {
     do {
-        usleep(5000);
+        usleep(500000);
         events.emit(EV_DROP);
     } while (running);
 }
@@ -56,7 +56,7 @@ int Game::run() {
                 goto cleanup;
             }
             bool ok = execute(e);
-            landed = e == EV_DROP && !ok;
+            landed = (e == EV_DROP || e == EV_HARD_DROP) && !ok;
             WorldView v = w->render();
             out->render(v);
             p->view(v);
@@ -73,10 +73,11 @@ cleanup:
 
 bool Game::execute(Event e) {
     switch (e) {
-    case EV_LEFT:   return w->move(MOVE_LEFT);
-    case EV_RIGHT:  return w->move(MOVE_RIGHT);
-    case EV_ROTATE: return w->rotate(ROTATE_CW);
-    case EV_DROP:   return w->drop();
+    case EV_LEFT:        return w->move(MOVE_LEFT);
+    case EV_RIGHT:       return w->move(MOVE_RIGHT);
+    case EV_ROTATE:      return w->rotate(ROTATE_CW);
+    case EV_DROP:        return w->drop();
+    case EV_HARD_DROP:   return w->hard_drop();
     }
     assert(e == EV_NONE);
     return true;

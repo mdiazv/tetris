@@ -8,9 +8,11 @@ using namespace std;
 int main() {
     auto seed = time(NULL) * 42;
     srand(seed);
-    RandomPlayer p;
+    HumanPlayer p;
+    //RandomPlayer p;
     World w;
-    StreamOutput out(&cout);
+    //StreamOutput out(&cout);
+    CursesOutput out;
     Game g(&p, &w, &out);
     g.start();
     cout << "seed " << seed << "\n";

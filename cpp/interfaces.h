@@ -14,7 +14,22 @@ class StreamOutput : public Output {
         ostream *out;
 };
 
+class CursesOutput : public Output {
+    public:
+        CursesOutput();
+        ~CursesOutput();
+        virtual void render(WorldView v);
+        virtual void gameover(int score);
+};
+
 class RandomPlayer : public Player {
+    public:
+        virtual void view(WorldView) {}
+    private:
+        virtual void run();
+};
+
+class HumanPlayer : public Player {
     public:
         virtual void view(WorldView) {}
     private:

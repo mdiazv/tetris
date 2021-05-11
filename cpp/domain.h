@@ -6,15 +6,15 @@
 using namespace std;
 
 using Color = int;
-using Rotation = int;
-using Direction = int;
 using Point = pair<int, int>;
 using WorldView = vector<vector<int>>;
 
+using Rotation = int;
 const Rotation ROTATE_CW  = 1;
 const Rotation NO_ROTATE  = 0;
 const Rotation ROTATE_CCW = -1;
 
+using Direction = int;
 const Direction MOVE_LEFT  = -1;
 const Direction NO_MOVE    = 0;
 const Direction MOVE_RIGHT = 1;
@@ -50,6 +50,8 @@ class World {
         bool move(Direction d);
         /** Drops current block by one position */
         bool drop();
+        /** Drops current block all the way to the bottom */
+        bool hard_drop();
         /** Spawn a new random block at the top center */
         bool spawn();
         /** Callback to notify that current block has landed */

@@ -86,6 +86,16 @@ bool World::drop() {
     return true;
 }
 
+bool World::hard_drop() {
+    Block b(*current);
+    b.drop();
+    while (valid(b)) {
+        current->drop();
+        b.drop();
+    }
+    return false;
+}
+
 bool World::landed() {
     auto color = current->color();
     for (auto p: current->points()) {
