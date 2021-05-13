@@ -130,6 +130,7 @@ bool World::drop() {
     Block b(*current);
     b.drop();
     if (!valid(b)) {
+        landed();
         return false;
     }
     current->drop();
@@ -143,16 +144,8 @@ bool World::hard_drop() {
         current->drop();
         b.drop();
     }
+    landed();
     return false;
-}
-
-bool World::landed() {
-    auto color = current->color();
-    for (auto p: current->points()) {
-        auto [x, y] = p;
-        Bs[y][x] = color;
-    }
-    return spawn();
 }
 
 int World::check_lines() {
@@ -164,6 +157,15 @@ int World::check_lines() {
         }
     }
     return ls;
+}
+
+bool World::landed() {
+    auto color = current->color();
+    for (auto p: current->points()) {
+        auto [x, y] = p;
+        Bs[y][x] = color;
+    }
+    return true;
 }
 
 void World::clear_line(int y) {

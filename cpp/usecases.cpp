@@ -51,11 +51,7 @@ int Game::run() {
     score = 0;
     p->start(&events);
     thread ticker(&Game::ticker, this);
-    do {
-        score += w->check_lines();
-        if (!w->spawn()) {
-            break;
-        }
+    while (w->spawn()) {
         render();
         bool landed = false;
         do {
@@ -71,7 +67,8 @@ int Game::run() {
             landed = (e == EV_DROP || e == EV_HARD_DROP) && !ok;
             render();
         } while (!landed);
-    } while (w->landed());
+        score += w->check_lines();
+    };
 cleanup:
     render();
     out->gameover(score);

@@ -28,6 +28,11 @@ const Direction MOVE_RIGHT = 1;
 using Point = pair<int, int>;
 using WorldView = vector<vector<int>>;
 
+/**
+ * Block represents a Tetris piece as vector of 4 points in {x, y} format (ps).
+ * Blocks have position (x, y), a rotation (r) and a color (c). Different
+ * orientations of the block should be added in CW rotation order on ps vector.
+ */
 class Block {
     public:
         virtual ~Block() {}
@@ -51,8 +56,18 @@ class Block {
             : c(c), x(x), y(y), r(rand()%ps.size()), ps(ps) {}
 };
 
+/**
+ * World represents the Tetris game area as a 2D Matrix of landed pieces (Bs)
+ * and a pointer for currently active block (current).
+ *
+ * When the current block can't be dropped anymore, drop and hard_drop will
+ * notify it by returning false. After a block lands, check_lines should be
+ * used to clear complete lines and retrieve the resulting score of the
+ * latest block. Finally, we can spawn a new block to continue the game.
+ */
 class World {
     public:
+        static const int R = 20, C = 10;
         World() : current(nullptr) {}
         /** Rotate current block one step in r direction */
         bool rotate(Rotation r);
@@ -64,18 +79,17 @@ class World {
         bool hard_drop();
         /** Spawn a new random block at the top center */
         bool spawn();
-        /** Callback to notify that current block has landed */
-        bool landed();
         /** Check for lines, delete them, returns number of lines */
         int check_lines();
         /** Return a 2D vector representation of the world */
         WorldView render();
     private:
-        static const int R = 20, C = 10;
-        int Bs[R][C] = {{0}};
+        Color Bs[R][C] = {{0}};
         Block *current;
         /** Is this block in a valid position? */
         bool valid(Block &b);
+        /** Writes current block to Bs, should be called after it lands */
+        bool landed();
         /** Clears line y by moving above blocks one line downwards */
         void clear_line(int y);
 };
