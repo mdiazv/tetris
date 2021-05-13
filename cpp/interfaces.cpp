@@ -114,11 +114,13 @@ void HumanPlayer::run() {
         int ch = getch();
         // Map chars to events and fire
         switch (ch) {
-            case KEY_LEFT:  events->emit(EV_LEFT); break;
-            case KEY_RIGHT: events->emit(EV_RIGHT); break;
-            case KEY_UP:    events->emit(EV_ROTATE); break;
-            case KEY_DOWN:  events->emit(EV_DROP); break;
+            case KEY_LEFT:  events->emit(EV_LEFT);      break;
+            case KEY_RIGHT: events->emit(EV_RIGHT);     break;
+            case KEY_UP:    events->emit(EV_ROTATE);    break;
+            case KEY_DOWN:  events->emit(EV_DROP);      break;
             case ' ':       events->emit(EV_HARD_DROP); break;
+            case 'p':       events->emit(EV_PAUSE);     break;
+            case 'q':       events->emit(EV_QUIT);      break;
         }
     }
 }

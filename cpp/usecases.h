@@ -22,7 +22,8 @@ const Event EV_RIGHT     = 2;
 const Event EV_ROTATE    = 3;
 const Event EV_DROP      = 4;
 const Event EV_HARD_DROP = 5;
-const Event EV_QUIT      = 6;
+const Event EV_PAUSE     = 6;
+const Event EV_QUIT      = 7;
 
 class InputEventQueue {
     public:
@@ -67,10 +68,13 @@ class Game {
         int score = 0;
         int level = 1;
         bool running = false;
+        bool pause = false;
         /** Game loop. Returns obtained score */
         int run();
         /** Emits a drop event with a frequency based on current level */
         void ticker();
+        /** Render game state to all observers */
+        void render();
         /** Apply received event on the world */
         bool execute(Event);
 };

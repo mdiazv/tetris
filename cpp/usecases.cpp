@@ -35,8 +35,15 @@ void Game::start() {
 void Game::ticker() {
     do {
         usleep(500000);
-        events.emit(EV_DROP);
+        if (!pause)
+            events.emit(EV_DROP);
     } while (running);
+}
+
+void Game::render() {
+    WorldView v = w->render();
+    out->render(v);
+    p->view(v);
 }
 
 int Game::run() {
@@ -49,21 +56,24 @@ int Game::run() {
         if (!w->spawn()) {
             break;
         }
+        render();
         bool landed = false;
         do {
             Event e = events.read();
             if (e == EV_QUIT) {
                 goto cleanup;
             }
+            if (e == EV_PAUSE) {
+                pause = !pause;
+                continue;
+            }
             bool ok = execute(e);
             landed = (e == EV_DROP || e == EV_HARD_DROP) && !ok;
-            WorldView v = w->render();
-            out->render(v);
-            p->view(v);
+            render();
         } while (!landed);
     } while (w->landed());
 cleanup:
-    out->render(w->render());
+    render();
     out->gameover(score);
     p->gameover();
     running = false;
