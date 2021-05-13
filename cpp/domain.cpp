@@ -26,23 +26,73 @@ void Block::drop() {
     y += 1;
 }
 
-class Square: public Block {
+class Square : public Block {
     public:
-        Square(int x, int y) : Block(x, y, 1, {
+        Square(int x, int y) : Block(x, y, COLOR_SQUARE, {
             {{0, 0}, {0, 1}, {1, 0}, {1, 1}},
         }) {}
 };
 
-class Line: public Block {
+class Line : public Block {
     public:
-        Line(int x, int y) : Block (x, y, 2, {
+        Line(int x, int y) : Block (x, y, COLOR_LINE, {
             {{0, 0}, {0, 1}, {0, 2}, {0, 3}},
             {{-1, 0}, {0, 0}, {1, 0}, {2, 0}},
         }) {}
 };
 
+class Harry : public Block {
+    public:
+        Harry(int x, int y) : Block (x, y, COLOR_HARRY, {
+            {{0, 0}, {0, 1}, {1, 1}, {1, 2}},
+            {{1, 0}, {2, 0}, {0, 1}, {1, 1}},
+        }) {}
+};
+
+class Potter : public Block {
+    public:
+        Potter(int x, int y) : Block (x, y, COLOR_POTTER, {
+            {{1, 0}, {0, 1}, {1, 1}, {0, 2}},
+            {{1, 0}, {2, 1}, {0, 0}, {1, 1}},
+        }) {}
+};
+
+class Jay : public Block {
+    public:
+        Jay(int x, int y) : Block (x, y, COLOR_JAY, {
+            {{1, 0}, {1, 1}, {1, 2}, {0, 2}},
+            {{0, 0}, {0, 1}, {1, 1}, {2, 1}},
+            {{0, 0}, {0, 1}, {0, 2}, {1, 0}},
+            {{2, 1}, {0, 0}, {1, 0}, {2, 0}},
+        }) {}
+};
+
+class Kay : public Block {
+    public:
+        Kay(int x, int y) : Block (x, y, COLOR_KAY, {
+            {{0, 0}, {0, 1}, {0, 2}, {1, 2}},
+            {{0, 0}, {1, 0}, {2, 0}, {0, 1}},
+            {{1, 0}, {1, 1}, {1, 2}, {0, 0}},
+            {{0, 1}, {1, 1}, {2, 1}, {2, 0}},
+        }) {}
+};
+
+class Rowling : public Block {
+    public:
+        Rowling(int x, int y) : Block (x, y, COLOR_ROWLING, {
+            {{0, 0}, {1, 0}, {2, 0}, {1, 1}},
+            {{1, 0}, {1, 1}, {1, 2}, {0, 1}},
+            {{0, 1}, {1, 1}, {2, 1}, {1, 0}},
+            {{0, 0}, {0, 1}, {0, 2}, {1, 1}},
+        }) {}
+};
+
 Block* Block::make(int x, int y) {
-    vector<Block> bs = {Square(x, y), Line(x, y)};
+    vector<Block> bs = {
+        Square(x, y), Line(x, y),
+        Harry(x, y), Potter(x, y),
+        Jay(x, y), Kay(x, y), Rowling(x, y),
+    };
     return new Block(bs[rand() % bs.size()]);
 }
 

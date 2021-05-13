@@ -6,8 +6,14 @@
 using namespace std;
 
 using Color = int;
-using Point = pair<int, int>;
-using WorldView = vector<vector<int>>;
+const Color COLOR_SQUARE  = 1;
+const Color COLOR_LINE    = 2;
+const Color COLOR_HARRY   = 3;
+const Color COLOR_POTTER  = 4;
+const Color COLOR_JAY     = 5;
+const Color COLOR_KAY     = 6;
+const Color COLOR_ROWLING = 7;
+const Color COLOR_WALL    = 8;
 
 using Rotation = int;
 const Rotation ROTATE_CW  = 1;
@@ -18,6 +24,9 @@ using Direction = int;
 const Direction MOVE_LEFT  = -1;
 const Direction NO_MOVE    = 0;
 const Direction MOVE_RIGHT = 1;
+
+using Point = pair<int, int>;
+using WorldView = vector<vector<int>>;
 
 class Block {
     public:
@@ -35,10 +44,11 @@ class Block {
         /** Create a random block positioned at (x,y) */
         static Block* make(int x, int y);
     protected:
-        int x, y, r, c;
+        Color c;
+        int x, y, r;
         vector<vector<Point>> ps;
-        Block(int x, int y, int c, vector<vector<Point>> ps)
-            : x(x), y(y), r(rand()%ps.size()), c(c), ps(ps) {}
+        Block(int x, int y, Color c, vector<vector<Point>> ps)
+            : c(c), x(x), y(y), r(rand()%ps.size()), ps(ps) {}
 };
 
 class World {
