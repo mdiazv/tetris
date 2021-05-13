@@ -22,18 +22,6 @@ void StreamOutput::render(WorldView v) {
     *out << "|\n";
 }
 
-CursesOutput::CursesOutput() {
-    initscr();
-    keypad(stdscr, true);
-    halfdelay(10);
-    clear();
-    noecho();
-}
-
-CursesOutput::~CursesOutput() {
-    endwin();
-}
-
 int rc = 0;
 
 void CursesOutput::render(WorldView v) {
@@ -47,6 +35,50 @@ void CursesOutput::render(WorldView v) {
 
 void CursesOutput::gameover(int score) {
 }
+
+CursesColorOutput::CursesColorOutput() {
+    start_color();
+    init_pair(0, COLOR_WHITE, COLOR_BLACK);
+    init_pair(1, COLOR_BLUE, COLOR_BLUE);
+    init_pair(2, COLOR_MAGENTA, COLOR_MAGENTA);
+    init_pair(8, COLOR_BLACK, COLOR_WHITE);
+}
+
+void CursesColorOutput::render(WorldView v) {
+    int R, C;
+    clear();
+    getmaxyx(stdscr, R, C);
+    int y = R - v.size() - 2;
+    int x = C / 2 - v[0].size() - 2;
+    for (auto row : v) {
+        move(y++, x);
+        attron(COLOR_PAIR(8));
+        addstr("  ");
+        attroff(COLOR_PAIR(8));
+        for (int c : row) {
+            attron(COLOR_PAIR(c));
+            addstr("  ");
+            attroff(COLOR_PAIR(c));
+        }
+        attron(COLOR_PAIR(8));
+        addstr("  ");
+        attroff(COLOR_PAIR(8));
+        addch('\n');
+    }
+    move(y++, x);
+    attron(COLOR_PAIR(8));
+    addstr("  ");
+    for (int i = 0; i < v[0].size(); ++i) {
+        addstr("  ");
+    }
+    addstr("  ");
+    attroff(COLOR_PAIR(8));
+    refresh();
+}
+
+void CursesColorOutput::gameover(int score) {
+}
+
 
 void StreamOutput::gameover(int score) {
     *out << "Game over! [" << score << " points]\n";

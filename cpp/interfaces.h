@@ -16,8 +16,13 @@ class StreamOutput : public Output {
 
 class CursesOutput : public Output {
     public:
-        CursesOutput();
-        ~CursesOutput();
+        virtual void render(WorldView v);
+        virtual void gameover(int score);
+};
+
+class CursesColorOutput : public Output {
+    public:
+        CursesColorOutput();
         virtual void render(WorldView v);
         virtual void gameover(int score);
 };
